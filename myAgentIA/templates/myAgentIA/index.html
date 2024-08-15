@@ -1,0 +1,76 @@
+{% extends "myAgentIA/base.html" %}
+
+{% block title %}
+   welcome page
+{% endblock %}
+
+{% block body %}
+
+    <br>
+    <header class="mt-5 ">
+        <div class="container col-6 text-center justify-content-center ">
+
+            <div>
+                <div>
+                    <h1 class="fs-4">Bienvenue sur notre Chatbox AI !</h1>
+                    <p class="fs-6">
+                        Discutez instantanément avec notre assistant intelligent. Que vous ayez des questions ou besoin d'aide, notre AI est là pour vous répondre 24/7. 
+                        Simple, rapide et intuitif — essayez-la maintenant !
+                    </p>
+                    <br>
+                    <div>
+                        <div>
+                            <div id="question-reponse text-center">
+                                <span id="load"></span>
+                                <h3><strong>Question:</strong>  <span class="question"></span></h3>
+                                    <p  class="text-center">{{ question }}</p>
+                                <div class="card justify-content-center" style="width:650px;">
+                                    <div class="card-body">
+                                    <h5 class="card-title ">Response : <span class="reponse"></span></h5>
+                                    <p class="card-text text-center">{{ response }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+        </header>
+            <div class=" container col-6">
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        <div>
+                            <label for="fileUpload" class="">Télecharger un pdf...</label>
+                            <input type="file" id="fileUpload" name="monFichier" class="form-control"/>
+                        </div>
+                        <br>
+                        <div>
+                            <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="90"></textarea>
+                        </div>
+                        <br>
+                        <div>
+                            <input type="submit" class="btn btn-primary" name="submitButton"/>
+                        </div>
+                </form>
+            </div>
+            </div>
+
+        </div>
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded',(e)=>{
+                const question=document.querySelector('.question')
+                const offsetViewport=question.getBoundingClientRect()
+                const topPosition=offsetViewport.top
+
+                window.scrollTo({
+                        top:topPosition,
+                        behavior: "smooth",
+                        });
+            })
+        </script>
+            
+
+{% endblock %}
+
