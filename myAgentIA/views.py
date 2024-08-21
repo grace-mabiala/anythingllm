@@ -3,22 +3,12 @@ from django.http import HttpRequest
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-import ollama
+
 
 # Create your views here.
 
 @login_required(login_url="/MyAI/login/")
 def index(request):
-    if request.method=="POST":
-        question=request.POST.get("textarea")
-        response = ollama.chat(model='gemma2:2b', messages=[
-        {
-            'role': 'user',
-            'content': question,
-        },
-        ])
-        
-        return render(request,'myAgentIA/index.html',context={'response':response['message']['content'],'question':question})
     return render(request,'myAgentIA/index.html',context={})
 
 @login_required(login_url="/MyAI/login/")

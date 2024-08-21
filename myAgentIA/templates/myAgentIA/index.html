@@ -22,12 +22,12 @@
                         <div>
                             <div id="question-reponse text-center">
                                 <span id="load"></span>
-                                <h3><strong>Question:</strong>  <span class="question"></span></h3>
-                                    <p  class="text-center">{{ question }}</p>
+                                <h3><strong>Question:</strong></h3>
+                                    <p  class="text-center" id="question"></p>
                                 <div class="card justify-content-center" style="width:650px;">
                                     <div class="card-body">
-                                    <h5 class="card-title ">Response : <span class="reponse"></span></h5>
-                                    <p class="card-text text-center">{{ response }}</p>
+                                    <h5 class="card-title ">Response :</h5>
+                                    <p class="card-text text-center" id="reponse"></p>
                                     </div>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                         </div>
                         <br>
                         <div>
-                            <input type="submit" class="btn btn-primary" name="submitButton"/>
+                            <input type="submit" class="submit btn btn-primary" name="submitButton"/>
                         </div>
                 </form>
             </div>
@@ -58,7 +58,38 @@
 
         <script>
             document.addEventListener('DOMContentLoaded',(e)=>{
-                const question=document.querySelector('.question')
+                const submitButton=document.querySelector(".submit")
+                submitButton.addEventListener("click",(e)=>{
+                    e.preventDefault()
+                    const message = document.getElementById("textarea").value
+
+                    const url="http://localhost:3001/api/v1/workspace/anythinllm/chat"
+
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'  // Ajout de la clé API
+                        },
+                        body: JSON.stringify({
+                            message:message,
+                            mode: "chat"
+                        })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            document.querySelector("#reponse").textContent=data.textResponse
+                            document.querySelector("#question").textContent=message
+                            document.getElementById("textarea").value=""
+                        })
+                        .catch(error => console.error('Error:', error));
+
+
+                })
+
+                //scroller jusqu'à l'élément question
+                const question=document.querySelector('#question')
                 const offsetViewport=question.getBoundingClientRect()
                 const topPosition=offsetViewport.top
 
