@@ -37,9 +37,10 @@
                 </div>
         </header>
             <div class=" container col-6">
-                <form action="" method="POST">
+                <br>
+                <form action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                        
+                        <input type="file" class="form-control" name="monFichier" id="fichiers">
                         <br>
                         <div>
                             <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="90"></textarea>
