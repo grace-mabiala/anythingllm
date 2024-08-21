@@ -18,15 +18,30 @@
                         Simple, rapide et intuitif — essayez-la maintenant !
                     </p>
                     <br>
+                    
+                </div>
+        </header>
+            <div class="row">
+
+                <div class="col-6 ">
+                    <div class="ms-5">
+                        <h3 class="text-center">Historique de chats</h3>
+
+                        <ul class="chatHistory">
+
+                        </ul>
+                        
+                    </div>
+                </div>
+                <div class=" container col-6">
                     <div>
                         <div>
                             <div id="question-reponse text-center">
-                                <span id="load"></span>
-                                <h3><strong>Question:</strong></h3>
+                                <h3 class="text-center"><strong>Question:</strong></h3>
                                     <p  class="text-center" id="question"></p>
                                 <div class="card justify-content-center" style="width:650px;">
                                     <div class="card-body">
-                                    <h5 class="card-title ">Response :</h5>
+                                    <h5 class="card-title text-center">Response :</h5>
                                     <p class="card-text text-center" id="reponse"></p>
                                     </div>
                                 </div>
@@ -34,23 +49,24 @@
                         </div>
                         
                     </div>
+                    <br>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                            <input type="file" class="form-control" name="monFichier" id="fichiers">
+                            <br>
+                            <div>
+                                <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="90"></textarea>
+                            </div>
+                            <br>
+                            <div>
+                                <input type="submit" class="submit btn btn-primary" name="submitButton"/>
+                            </div>
+                    </form>
                 </div>
-        </header>
-            <div class=" container col-6">
-                <br>
-                <form action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                        <input type="file" class="form-control" name="monFichier" id="fichiers">
-                        <br>
-                        <div>
-                            <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="90"></textarea>
-                        </div>
-                        <br>
-                        <div>
-                            <input type="submit" class="submit btn btn-primary" name="submitButton"/>
-                        </div>
-                </form>
+
+                
             </div>
+            
             </div>
 
         </div>
@@ -58,6 +74,66 @@
 
         <script>
             document.addEventListener('DOMContentLoaded',(e)=>{
+
+
+                function getMessagesByChatId(history) {
+                        const messagesByChatId = {};
+
+                        history.forEach(entry => {
+                            const chatId = entry.chatId;
+
+                            if (!messagesByChatId[chatId]) {
+                            messagesByChatId[chatId] = { user: null, assistant: null };
+                            }
+
+                            if (entry.role === 'user') {
+                            messagesByChatId[chatId].user = entry.content;
+                            } else if (entry.role === 'assistant') {
+                            messagesByChatId[chatId].assistant = entry.content;
+                            }
+                        });
+
+                        return messagesByChatId;
+                        }
+                //fecth les chats 
+                fetch('http://localhost:3001/api/v1/workspace/anythingllm/chats', {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'  // Include the Bearer token for authorization
+                    }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        const history=data.history
+                        const chatHistory=document.querySelector('.chatHistory')
+
+                        splitArray=getMessagesByChatId(history)
+                        // Objet initial
+                            // Conversion en array
+                            const conversationArray = Object.keys(splitArray).map(chatId => ({
+                            chatId: parseInt(chatId),
+                            user: splitArray[chatId].user,
+                            assistant: splitArray[chatId].assistant
+                            }));
+
+                            let content=''
+                            conversationArray.forEach((element)=>{
+                                 content+=`
+                                 </br>
+                                        <li>
+                                            <span> <strong> Question: </strong>${element.user}</span></br>
+                                            <span> <strong> Reponse:</strong>${element.assistant}</span>
+                                        </li>`
+
+                            })
+
+                            chatHistory.innerHTML=content
+
+                                })
+                    .catch(error => console.error('Error:', error));
+
+                
                 const submitButton=document.querySelector(".submit")
                 submitButton.addEventListener("click",(e)=>{
                     e.preventDefault()
