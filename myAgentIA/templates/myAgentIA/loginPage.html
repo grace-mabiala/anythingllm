@@ -1,0 +1,31 @@
+{% extends "myAgentIA/base.html" %}
+
+{% block title %} 
+    Login
+{% endblock %}
+
+
+{% block body %}
+
+<br>
+<div class="container col-6 mt-9" style="margin: 50px auto;">
+    <h2>Formulaire de connexion</h2>
+    <br>
+    <form action="" method="POST" >
+        {% csrf_token %}
+        <div>
+            <input type="text" name="Nom" placeholder="Votre nom utilisateur" class="form-control">
+
+        </div>
+        <br>
+        <div>
+            <input type="password" name="Password" placeholder="Votre mot de passe " class="form-control">
+        </div>
+        <br>
+        <input type="submit" class="btn btn-primary" value="Envoyer">
+    </form>
+    <br>
+    <a href="{% url 'register' %}" class="link"> Créer un compte</a><br>
+</div>
+
+{% endblock %}
