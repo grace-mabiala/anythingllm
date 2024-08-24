@@ -6,24 +6,74 @@
 
 {% block body %}
 
+<!-- Partie du header -->
     <br>
     <header class="mt-5 ">
         <div class="container col-6 text-center justify-content-center ">
 
-            <div>
                 <div>
-                    <h1 class="fs-4">Bienvenue sur notre Chatbox AI !</h1>
-                    <p class="fs-6">
-                        Discutez instantanément avec notre assistant intelligent. Que vous ayez des questions ou besoin d'aide, notre AI est là pour vous répondre 24/7. 
-                        Simple, rapide et intuitif — essayez-la maintenant !
-                    </p>
-                    <br>
-                    
+                    <div>
+                        <h1 class="fs-4">Bienvenue <span class="text-blue">{{ request.user.username|capfirst}}</span> sur notre Chatbox AI !</h1>
+                        <p class="fs-6">
+                            Discutez instantanément avec notre assistant intelligent. Que vous ayez des questions ou besoin d'aide, notre AI est là pour vous répondre 24/7. 
+                            Simple, rapide et intuitif — essayez-la maintenant !
+                        </p>
+                        <br>
+                        
                 </div>
-        </header>
-            <div class="row">
 
-                <div class="col-6 ">
+        </div>
+    </header>
+    <br>
+        <!-- créer un workspace -->
+        <section id="displayNone1">
+            <div class="container col-6">
+                <!-- Button trigger modal -->
+                   
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">Créer un workspace</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                            <form >
+                                <input type="text" id="inputModal" class="form-control"/>
+                            </form>
+                            </div>
+                            <div class="modal-footer ">
+                            <button type="submit" class="btn btn-secondary" id="btnModal" data-bs-dismiss="modal">Envoyer</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                <!-- Les workspaces ou les espaces de travail -->
+                    <div>
+                        <h3 class="text-center">Espaces de travail</h3>
+                    </div>
+                    <br>
+                    <button type="button"  class="btn btn-primary ms-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Ajouter
+                    </button>
+                    <br>
+                    <br>
+                    <ul id="list">
+                    
+                    </ul>
+            </div>
+
+        </section>
+        
+            
+
+    <section id="displayNone">
+        <!-- Partie sur les historiques de l'espace de travail-->
+            <div class="container row">
+                <div class="col-4">
                     <div class="ms-5">
                         <h3 class="text-center">Historique de chats</h3>
 
@@ -33,17 +83,18 @@
                         
                     </div>
                 </div>
-                <div class=" container col-6">
+
+                <!--  Partie sur le formulaire  -->
+                  <br>
+                <div class="col-6">
                     <div>
                         <div>
-                            <div id="question-reponse text-center">
-                                <h3 class="text-center"><strong>Question:</strong></h3>
-                                    <p  class="text-center" id="question">Aucune question</p>
-                                <div class="card justify-content-center" style="width:650px;">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-center">Response :</h5>
-                                    <p class="card-text text-center" id="reponse">Aucune réponse</p>
-                                    </div>
+                            <div id="question-reponse" class="text-center">
+                                <h3><strong>Question:</strong></h3>
+                                <p id="question">Aucune question</p>
+                                <div>
+                                    <h5 >Response :</h5>
+                                    <p id="reponse">Aucune réponse</p>
                                 </div>
                             </div>
                         </div>
@@ -52,33 +103,193 @@
                     <br>
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                            <input type="file" class="form-control" name="monFichier" id="fichiers">
-                            <br>
-                            <div>
-                                <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="90"></textarea>
-                            </div>
-                            <br>
-                            <div>
-                                <input type="submit" class="submit btn btn-primary" name="submitButton"/>
-                            </div>
+                        <input type="file" class="form-control" name="monFichier" id="fichiers">
+                        <br>
+                        <div>
+                            <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="100"></textarea>
+                        </div>
+                        <br>
+                        <div>
+                            <input type="submit" class="submit btn btn-primary" name="submitButton"/>
+                        </div>
                     </form>
                 </div>
 
-                
+                <div class="col-2">
+                    <div>
+                        <a  href="" id="createWorkspace">Créer un workspace</a>
+                    </div>
+                </div>
+  
             </div>
             
             </div>
 
         </div>
-
-
+</section>
         <script>
             document.addEventListener('DOMContentLoaded',(e)=>{
 
+                document.querySelector("#createWorkspace").addEventListener("click",e=>{
+                    e.preventDefault()
+                    sectionDisplayNone1=document.querySelector("#displayNone1")
+                    sectionDisplayNone1.style.display="block"
+                    sectionDisplayNone=document.querySelector("#displayNone")
+                    sectionDisplayNone.style.display="none"
+                })
+                
 
+                const btnModal=document.querySelector("#btnModal")
+                const inputModal=document.querySelector("#inputModal")
+
+                btnModal.addEventListener("click",(e)=>{
+
+
+                        inputValue=inputModal.value
+                        const url1='http://localhost:3001/api/v1/workspace/new'
+
+                        let myObjects={
+                                        name:inputValue
+                                        }
+                        fetch(url1, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'  // Ajout de la clé API
+                        },
+                        body: JSON.stringify(myObjects)
+                        })
+                        .then(data=>{
+                            getWorkspaces()
+                        })
+                        .catch(error => console.error('Error:', error));
+                        
+                        
+                   })
+
+
+                // js pour le workspace
+                getWorkspaces()
+                //fetch workspaces fuction
+                function getWorkspaces(){
+                    const url='http://localhost:3001/api/v1/workspaces'
+                        fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'
+                        }
+                        })
+                        .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                        })
+                        .then(data => {
+                            const list=document.querySelector("#list")
+                            let content=""
+                            data.workspaces.forEach(element => {
+                                content+=`<li class="list-group-item d-flex">
+                                            <span > <a href="" name=${element.slug}>${element.name} </a></span>
+
+                                            <div style="width:100%;display:flex;justify-content:end;">
+                                                <div>
+                                                    <button class="btn btn-danger me-2" name=${element.slug}>Supprimer</button>
+                                                </div>
+                                                <div>
+                                                    <button class="btn btn-secondary" name=${element.slug}>Rénomer</button>
+                                                </div>
+                                            </div>
+                                          </li>`
+                            });
+
+                            list.innerHTML=content
+                        }
+                        )
+                        .catch(error => console.error('There was a problem with the fetch operation:', error));
+
+                }
+                // supprimer un espace de travail
+                function deleteWorkspace(workspace){
+                        const url2=`http://localhost:3001/api/v1/workspace/${workspace}`
+                        fetch(url2, {
+                        method: 'DELETE',
+                        headers: {
+                            'accept': '*/*',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'
+                        }
+                        })
+                        .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur: ' + response.status);
+                        } // ou response.text() si la réponse n'est pas en JSON
+                        getWorkspaces()
+                        })
+                }
+
+                //faire une requête http pour changer le nom du workspace
+                function updateWorkspace(workspace,currentWorkspace){
+                    const url=`http://localhost:3001/api/v1/workspace/${currentWorkspace}/update`
+                                    // requête de soumission de données du formulaire au API de anythingLLM
+
+                    const objectJs={
+                                "name":workspace,
+                                "openAiTemp": 0.7,
+                                "openAiHistory": 20,
+                                "openAiPrompt": "Respond to all inquires and questions in binary - do not respond in any other format."
+                                }
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'  // Ajout de la clé API
+                        },
+                        body: JSON.stringify(objectJs)
+                        })
+                        .then(data=>{
+                            getWorkspaces()
+                        })
+                            .catch(error => console.error('Error:', error))
+
+                        }
+
+
+                        // ajouter un evénement au bouton 
+
+                    
+                    list.addEventListener("click",(e)=>{
+                        e.preventDefault()
+                        if (e.target.hasAttribute("href")){
+                            sectionDisplayNone=document.querySelector("#displayNone")
+                            sectionDisplayNone.style.display="inline-block"
+                            sectionDisplayNone1=document.querySelector("#displayNone1")
+                            sectionDisplayNone1.style.display="None"
+
+
+                            }
+                            else if(e.target.textContent==="Supprimer"){
+                                const workspace=e.target.name
+                                deleteWorkspace(workspace)
+                            }
+                            else if(e.target.textContent==="Rénomer")
+                            {
+                                const currentWorkspace=e.target.name
+                                const newWorkspace=prompt("Entrer le nouveau nom du workspace")
+                                updateWorkspace(newWorkspace,currentWorkspace)
+                            }
+
+                        })
+
+
+                //section display none
+                document.querySelector("#displayNone").style.display="None"
+                
+                //fonction qui permet d'extraire les donnée après la requête http
                 function getMessagesByChatId(history) {
                         const messagesByChatId = {};
-
                         history.forEach(entry => {
                             const chatId = entry.chatId;
 
@@ -95,8 +306,14 @@
 
                         return messagesByChatId;
                         }
-                //fecth les chats 
-                fetch('http://localhost:3001/api/v1/workspace/anythingllm/chats', {
+
+            //get specific workspace chats
+                function getWorkspaceChat(workspace){
+
+                    const url= `http://localhost:3001/api/v1/workspace/${workspace}/chats`
+
+            //fecth les chats 
+                fetch(url, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json',
@@ -109,7 +326,6 @@
                         const chatHistory=document.querySelector('.chatHistory')
 
                         splitArray=getMessagesByChatId(history)
-                        // Objet initial
                             // Conversion en array
                             const conversationArray = Object.keys(splitArray).map(chatId => ({
                             chatId: parseInt(chatId),
@@ -125,7 +341,6 @@
                                             <span> <strong> Question: </strong>${element.user}</span></br>
                                             <span> <strong> Reponse:</strong>${element.assistant}</span>
                                         </li>`
-
                             })
 
                             chatHistory.innerHTML=content
@@ -133,14 +348,41 @@
                                 })
                     .catch(error => console.error('Error:', error));
 
+
+                }
+
+
+            list.addEventListener("click",(e)=>{
+                                    const workspace=e.target.name
+
+                                    if(e.target.hasAttribute("href")){
+                                        getWorkspaceChat(workspace)
+                                    }
+
+                                    })
+                
                 
                 const submitButton=document.querySelector(".submit")
+
+                   // initilialisation des éléments chargement...
+                const questionElt=document.querySelector("#question")
+                const reponseElt=document.querySelector("#reponse")
+                
+
+                   // Lorsque l'on clique pour soumettre le formulaire
+                
                 submitButton.addEventListener("click",(e)=>{
                     e.preventDefault()
+                    // récuperer le message de textarea afin de l'envoyer par http avec fetch
                     const message = document.getElementById("textarea").value
+                    //initialisation du responseElt et du questionElt 
+                    reponseElt.textContent="Chargement..."
+                    questionElt.textContent=message
+                    //vider le textarea
+                    document.getElementById("textarea").value=""
 
-                    const url="http://localhost:3001/api/v1/workspace/anythinllm/chat"
-
+                    const url=`http://localhost:3001/api/v1/workspace/anythingllm/chat`
+                    // requête de soumission de données du formulaire au API de anythingLLM
                     fetch(url, {
                         method: 'POST',
                         headers: {
@@ -157,7 +399,7 @@
                         .then(data => {
                             document.querySelector("#reponse").textContent=data.textResponse
                             document.querySelector("#question").textContent=message
-                            document.getElementById("textarea").value=""
+                            
                         })
                         .catch(error => console.error('Error:', error));
 

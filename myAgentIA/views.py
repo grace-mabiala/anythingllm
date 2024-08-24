@@ -9,11 +9,19 @@ from django.contrib.auth.decorators import login_required
 
 @login_required(login_url="/MyAI/login/")
 def index(request):
+    print(request.GET.get("workspace"))
     return render(request,'myAgentIA/index.html',context={})
 
 @login_required(login_url="/MyAI/login/")
 def accueil(request):
     return render(request,'myAgentIA/accueil.html')
+
+
+@login_required(login_url="/MyAI/login/")
+def workspace(request):
+    return render(request,"myAgentIA/workspace.html",context={})
+
+#Login fonction 
 
 def LoginF(request):
     if request.method=="POST":
@@ -27,17 +35,25 @@ def LoginF(request):
             return render(request,"myAgentIA/loginPage.html")
     return render(request,"myAgentIA/loginPage.html")
 
+#Registration fonction
+
 def RegisterF(request):
     if request.method=="POST":
         nom=request.POST.get("Nom")
         email=request.POST.get("Email")
         password=request.POST.get("Password")
-        u = User.objects.get(username=password)
-        if u is None:
+    
+        try:
             user = User.objects.create_user(username=nom,
-                                email=email,
-                                password=password)
+                                    email=email,
+                                    password=password)
+        except:
+            error="Un utilisateur avec le même mot de passe existe déjà"
+            return render(request,"myAgentIA/registerPage.html",context={'error':error})
+                
+        else:
             user.save()
+            auth.login(request,user)   
         return redirect('accueil')
 
     return render(request,"myAgentIA/registerPage.html")
