@@ -59,6 +59,10 @@ def RegisterF(request):
     return render(request,"myAgentIA/registerPage.html")
 
 
+def promptchat(request):
+    return render(request,"myAgentIA/promptchat.html")
+
+
 def logout_view(request):
     auth.logout(request)
     return redirect("login")

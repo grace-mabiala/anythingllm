@@ -44,7 +44,7 @@
                             </form>
                             </div>
                             <div class="modal-footer ">
-                            <button type="submit" class="btn btn-secondary" id="btnModal" data-bs-dismiss="modal">Envoyer</button>
+                            <button type="submit" class="btn btn-secondary" id="btnModal" data-bs-dismiss="modal"><i class="bi bi-send-fill"></i> Envoyer</button>
                             </div>
                         </div>
                         </div>
@@ -57,7 +57,7 @@
                     </div>
                     <br>
                     <button type="button"  class="btn btn-primary ms-5" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                        Ajouter
+                        <i class="bi bi-folder-plus"></i> Ajouter
                     </button>
                     <br>
                     <br>
@@ -76,9 +76,8 @@
                 <div class="col-4">
                     <div class="ms-5">
                         <h3 class="text-center">Historique de chats</h3>
-
                         <ul class="chatHistory">
-
+                    
                         </ul>
                         
                     </div>
@@ -103,21 +102,64 @@
                     <br>
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="file" class="form-control" name="monFichier" id="fichiers">
+                        
                         <br>
                         <div>
-                            <textarea name="textarea" id="textarea" placeholder="Rentrez un message..." class="form-control" rows="4" cols="100"></textarea>
+                            <textarea name="textarea"  id="prompt" placeholder="Entrez votre prompt..." class="form-control" rows="4" cols="100"></textarea>
+
+                            <br>
+                            <div class="input-container">
+                                <input type="text" class="rounded-input" id="textarea" placeholder="Entrez votre texte ici">
+                            </div>
                         </div>
                         <br>
-                        <div>
-                            <input type="submit" class="submit btn btn-primary" name="submitButton"/>
+                        <div class="row">
+                            <div class="col-2"><input type="submit" required class="submit btn btn-primary"  name="submitButton"/></div>
+                            
+                            <div class="col-4"><label  for="fichiers" id="btnFichiers" class="btn btn-primary"><i class="bi bi-cloud-upload-fill"></i> Un fichier</label>
+                                <input type="file" class="btn btn-primary" style="display: none;" name="monFichier" id="fichiers"><br></div>
                         </div>
                     </form>
                 </div>
 
                 <div class="col-2">
                     <div>
-                        <a  href="" id="createWorkspace">Créer un workspace</a>
+                        <a  href="" id="createWorkspace"> <i class="bi bi-folder-fill"></i>New workspace</a><br>
+                        <a  href="{% url 'promptchat' %}" id="createWorkspace"><i class="bi bi-box-arrow-up-right"></i> Prompt chatbot</a>
+                        <br>
+                        <div style="margin-top:160px;;">
+                            <h6>Choisir une langue </h6>
+                            <select id="selectMenu">
+                                <option value="en">English (Anglais)</option>
+                                <option value="zh">中文 (Chinois)</option>
+                                <option value="es">Español (Espagnol)</option>
+                                <option value="hi">हिन्दी (Hindi)</option>
+                                <option value="ar">العربية (Arabe)</option>
+                                <option value="bn">বাংলা (Bengali)</option>
+                                <option value="pt">Português (Portugais)</option>
+                                <option value="ru">Русский (Russe)</option>
+                                <option value="ja">日本語 (Japonais)</option>
+                                <option value="de">Deutsch (Allemand)</option>
+                                <option value="ko">한국어 (Coréen)</option>
+                                <option value="fr" selected>Français</option>
+                                <option value="it">Italiano (Italien)</option>
+                                <option value="tr">Türkçe (Turc)</option>
+                                <option value="vi">Tiếng Việt (Vietnamien)</option>
+                                <option value="th">ไทย (Thaï)</option>
+                                <option value="pl">Polski (Polonais)</option>
+                                <option value="fa">فارسی (Persan)</option>
+                                <option value="id">Bahasa Indonesia (Indonésien)</option>
+                                <option value="ms">Bahasa Melayu (Malais)</option>
+                                <option value="ur">اردو (Ourdou)</option>
+                            </select>
+                        </div>
+
+                        <br>
+                        <div>
+                            <h6>Température</h6>
+                            <input type="number" id="quantity" name="quantity" min="0.00" max="1" value="0.7" step="0.1">
+                        </div>
+                        
                     </div>
                 </div>
   
@@ -148,9 +190,7 @@
                         inputValue=inputModal.value
                         const url1='http://localhost:3001/api/v1/workspace/new'
 
-                        let myObjects={
-                                        name:inputValue
-                                        }
+                        let myObjects={name:inputValue}
                         fetch(url1, {
                         method: 'POST',
                         headers: {
@@ -196,10 +236,10 @@
 
                                             <div style="width:100%;display:flex;justify-content:end;">
                                                 <div>
-                                                    <button class="btn btn-danger me-2" name=${element.slug}>Supprimer</button>
+                                                    <button class="btn btn-danger me-2" name=${element.slug}> <i class="bi bi-trash"></i> <span>Supprimer</span></button>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-secondary" name=${element.slug}>Rénomer</button>
+                                                    <button class="btn btn-secondary" name=${element.slug}><i class="bi bi-pencil-square"></i> <span>Rénomer</span></button>
                                                 </div>
                                             </div>
                                           </li>`
@@ -238,7 +278,7 @@
                                 "name":workspace,
                                 "openAiTemp": 0.7,
                                 "openAiHistory": 20,
-                                "openAiPrompt": "Respond to all inquires and questions in binary - do not respond in any other format."
+                                "openAiPrompt": "réponds à toutes les questions posées. Si le contexte est specifié, réponds par rapport à ce contexte"
                                 }
                     fetch(url, {
                         method: 'POST',
@@ -262,7 +302,9 @@
                     
                     list.addEventListener("click",(e)=>{
                         e.preventDefault()
-                        if (e.target.hasAttribute("href")){
+                        let listItem=e.target
+                
+                        if (listItem.hasAttribute("href")){
                             sectionDisplayNone=document.querySelector("#displayNone")
                             sectionDisplayNone.style.display="inline-block"
                             sectionDisplayNone1=document.querySelector("#displayNone1")
@@ -270,13 +312,13 @@
 
 
                             }
-                            else if(e.target.textContent==="Supprimer"){
-                                const workspace=e.target.name
+                            else if(listItem.textContent==="Supprimer"){
+                                const workspace=e.target.parentElement.name
                                 deleteWorkspace(workspace)
                             }
-                            else if(e.target.textContent==="Rénomer")
+                            else if(listItem.textContent==="Rénomer")
                             {
-                                const currentWorkspace=e.target.name
+                                const currentWorkspace=e.target.parentElement.name               
                                 const newWorkspace=prompt("Entrer le nouveau nom du workspace")
                                 updateWorkspace(newWorkspace,currentWorkspace)
                             }
@@ -351,9 +393,10 @@
 
                 }
 
-
+            let workspaceCurrent=''
             list.addEventListener("click",(e)=>{
                                     const workspace=e.target.name
+                                    workspaceCurrent=workspace
 
                                     if(e.target.hasAttribute("href")){
                                         getWorkspaceChat(workspace)
@@ -367,21 +410,13 @@
                    // initilialisation des éléments chargement...
                 const questionElt=document.querySelector("#question")
                 const reponseElt=document.querySelector("#reponse")
-                
 
-                   // Lorsque l'on clique pour soumettre le formulaire
-                
-                submitButton.addEventListener("click",(e)=>{
-                    e.preventDefault()
-                    // récuperer le message de textarea afin de l'envoyer par http avec fetch
-                    const message = document.getElementById("textarea").value
-                    //initialisation du responseElt et du questionElt 
-                    reponseElt.textContent="Chargement..."
-                    questionElt.textContent=message
-                    //vider le textarea
-                    document.getElementById("textarea").value=""
 
-                    const url=`http://localhost:3001/api/v1/workspace/anythingllm/chat`
+                //chat using the api
+
+            function chatApi(message){
+
+                const url=`http://localhost:3001/api/v1/workspace/${workspaceCurrent}/chat`
                     // requête de soumission de données du formulaire au API de anythingLLM
                     fetch(url, {
                         method: 'POST',
@@ -399,12 +434,136 @@
                         .then(data => {
                             document.querySelector("#reponse").textContent=data.textResponse
                             document.querySelector("#question").textContent=message
+
+                            getWorkspaceChat(workspaceCurrent)
                             
                         })
                         .catch(error => console.error('Error:', error));
+            }
+                
 
+                   // Lorsque l'on clique pour soumettre le formulaire
+                
+                submitButton.addEventListener("click",(e)=>{
+                    e.preventDefault()
+                    
+                    // récuperer le message de textarea afin de l'envoyer par http avec fetch
+                    const message = document.getElementById("textarea").value
+                    //initialisation du responseElt et du questionElt 
+                    reponseElt.innerHTML=`<div class="spinner-border text-primary" role="status">
+                                          <span class="visually-hidden">Loading...</span>
+                                         </div>`
+                    questionElt.textContent=message
+                    //vider le textarea
+                    document.getElementById("textarea").value=""
+                    const tempApi=document.getElementById("quantity").value
+
+
+                    let promptInput=document.querySelector("#prompt").value
+                    
+                    if (promptInput===''){
+                        promptInput="Si le contexte est specifié,réponds par raport au contexte."
+                    }
+                    const languageSelect=document.querySelector("#selectMenu")
+                    const codeLang=document.querySelector("#selectMenu").value
+                    let language='Français'
+
+
+                    // parcourir toutes les options afin de prendre le contenu du texte
+
+                    for (let i = 0; i < languageSelect.options.length; i++) {
+                        const option = languageSelect.options[i];
+
+                        if (option.value===codeLang)
+                         {
+                            language=option.text
+                            console.log(language)
+                         }
+
+                        // Affiche la valeur et le texte de l'option dans la conso
+                        }
+
+
+                    
+                    // update workspace before chatting
+
+                    // requête de soumission de données du formulaire au API de anythingLLM
+
+                    const objectJs={
+                                "name":'AnythingLLM',
+                                "openAiTemp": parseFloat(tempApi),
+                                "openAiHistory": 20,
+                                "openAiPrompt": `Traduis les réponse en langue ${language}.${promptInput}.`
+                                }
+                    fetch(`http://localhost:3001/api/v1/workspace/${workspaceCurrent}/update`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2'  // Ajout de la clé API
+                        },
+                        body: JSON.stringify(objectJs)
+                        })
+                        .then(data=>{
+                            chatApi(message)
+                            
+                            
+                        })
+                            .catch(error => console.error('Error:', error))
+
+                    
 
                 })
+
+
+
+
+            //Uploading the file
+            const fichier = document.getElementById("fichiers")
+            fichier.addEventListener("change",(e)=>{
+        
+            let monFichier = fichier.files[0]; 
+            let formData = new FormData();
+            if(monFichier.type==="application/pdf" || monFichier.type==="application/plain")
+            {
+                formData.append("file",monFichier)
+                console.log(formData)
+                fetch('http://localhost:3001/api/v1/document/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2',
+                        // 'Content-Type': 'multipart/form-data', // Ne pas inclure cette ligne, fetch gère cela automatiquement
+                        'accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data =>{
+                    const name=data.documents[0].title
+                    const id=data.documents[0].id
+                    moveFile(name,id)
+                })
+                .catch(error => console.error('Error:', error));
+
+            }
+            })
+
+        function moveFile(nom,id){
+
+                        const myObject={"files": [ {"from": `custom-documents/${nom}-${id}.json`,"to": `folder/${nom}-${id}.json` }]}
+                        
+                        fetch('http://localhost:3001/api/v1/document/move-files', {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': 'Bearer NCCMGE7-EX549F3-M07Q82E-5VZ22F2',
+                                    // 'Content-Type': 'multipart/form-data', // Ne pas inclure cette ligne, fetch gère cela automatiquement
+                                    'accept': 'application/json'
+                                },
+                                body: JSON.stringify(myObject)
+                            })
+                            .then(response => response.json())
+                            .then(data => console.log(data))
+                   }
 
                 //scroller jusqu'à l'élément question
                 const question=document.querySelector('#question')
