@@ -1,0 +1,43 @@
+{% extends "myAgentIA/base.html" %}
+
+{% block title %}
+   welcome page
+{% endblock %}
+
+{% block body %}
+
+            <div class="container col-6">
+
+                <br>
+                <br>
+                <br>
+                <br>
+                <h2 class="text-primary underlined text-center">1. Le Formulaire de Configuration</h2><br>
+
+                <h4>a. Le Prompt Personnalisé</h4>
+                <p>Notre site vous permet de personnaliser la manière dont vous souhaitez recevoir les réponses. Pour ce faire, vous pouvez entrer un prompt dans le champ prévu à cet effet. Ce prompt vous permet de guider l'IA en fonction de vos besoins spécifiques.</p>
+                <p class="note text-danger"> Note : Si vous ne fournissez pas de prompt, ne vous inquiétez pas ! L'application utilisera automatiquement un prompt par défaut.</p>
+
+                <h4>b. La Température de l'API</h4>
+                <p>Le champ Température  vous permet d'ajuster la créativité des réponses générées par l'IA. Une valeur plus basse (proche de 0) produira des réponses plus déterministes et directes, tandis qu'une valeur plus élevée (proche de 1) augmentera la diversité et l'imprévisibilité des réponses.</p>
+
+                <h4>c. La Langue</h4>
+                <p>Vous avez également la possibilité de spécifier la langue  dans laquelle vous souhaitez recevoir les réponses. Choisissez simplement la langue de votre choix dans le menu déroulant.</p>
+
+                <h4>d. Upload de Documents</h4>
+                <p>Notre site vous offre la possibilité d uploader un document  (PDF, texte, etc.) pour que l'IA puisse en analyser le contenu et répondre en conséquence. Assurez-vous que le document est dans un format pris en charge et que sa taille respecte les limites imposées.</p>
+
+                <h4>2. Envoi du Message</h4>
+                <p>Le champ Message  est obligatoire. Vous devez y entrer le texte ou la question pour laquelle vous souhaitez obtenir une réponse. Sans ce message, l'application ne pourra pas générer de réponse, même si un prompt est fourni.</p>
+                <p class="note text-warning">Rappel : Même si vous n'entrez pas de prompt personnalisé, le message doit être rempli pour que l'application puisse fonctionner correctement.</p>
+
+                <h4>3. Finaliser et Envoyer</h4>
+                <p>Une fois tous les champs remplis à votre convenance, cliquez sur le bouton Envoyer  pour soumettre votre requête. L'IA analysera vos paramètres et vous fournira une réponse selon vos instructions.</p>
+            </div>
+            <br>
+            <footer class="text-center bg-dark text-light" style="height:30px;">
+                &copy; 2024 Notre Site Web - Tous droits réservés.
+            </footer>
+
+
+{% endblock %}

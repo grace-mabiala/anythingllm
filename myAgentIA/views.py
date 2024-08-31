@@ -59,8 +59,8 @@ def RegisterF(request):
     return render(request,"myAgentIA/registerPage.html")
 
 
-def promptchat(request):
-    return render(request,"myAgentIA/promptchat.html")
+def Aide(request):
+    return render(request,"myAgentIA/Aide.html")
 
 
 def logout_view(request):
